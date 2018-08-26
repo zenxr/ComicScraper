@@ -4,9 +4,7 @@ import shutil
 import os
 from bs4 import BeautifulSoup as soup
 
-DOWNLOADS_DIR = config.download_dir
-
-def download(urls, title, chapter):
+def download(urls, title, chapter, dir):
 	# For every line in the file
 	for url in urls:
 	    # Split on the rightmost / and take everything on the right side of that
@@ -15,10 +13,10 @@ def download(urls, title, chapter):
 
 	    # if a chapter exists
 	    if chapter:
-	    	filename = os.path.join(DOWNLOADS_DIR, title, chapter, name)
+	    	filename = os.path.join(dir, title, chapter, name)
 	    	# Combine the name and the downloads directory to get the local filename
 	    else:
-	    	filename = os.path.join(DOWNLOADS_DIR, title, name)
+	    	filename = os.path.join(dir, title, name)
 	    # ensure the directory exists
 	    directory = os.path.dirname(filename)
 	    if not os.path.exists(directory):
@@ -45,7 +43,7 @@ def getLinks(url):
 		# for the specific site being scraped
 		# all relevant images only contain numbers
 		if filename.isdigit():
-			# for all numeric filenames, append to 
+			# for all numeric filenames, append to
 			storylinks.append(link['src'])
 			# grab the chapter name
 			# note: this really only needs to be done once
@@ -53,6 +51,9 @@ def getLinks(url):
 			chapter = link['src'].rsplit('/', 2)[-2]
 			# grab the title
 			title = link['src'].rsplit('/', 3)[-3]
+	# if there are no chapters, then the url is formatted as
+	# http://domain.com/title/page_num.extension
+	# handle accordingly
 	if "chap" in chapter.lower():
 		return title, chapter, storylinks
 	else:
@@ -68,9 +69,13 @@ def getAllChapters(url):
 	for possible_chapter in possible_chapters:
 		chapters.append(possible_chapter['href'])
 	return(chapters)
-		
-chapters = getAllChapters("http://mangakakalot.com/manga/seishun_x_kikanjuu")
-for chapter in chapters:
-	title, current_chapter, urls = getLinks(chapter)
-	print("Title: " + title + " Chap : " + current_chapter)
-	download(urls, title, current_chapter)
+
+def getSeries(url, directory):
+	chapters = getAllChapters(url)
+	for chapter in chapters:
+		title, current_chapter, urls = getLinks(chapter)
+		print("Title: " + title + " Chap : " + current_chapter)
+		download(urls, title, current_chapter, directory)
+
+if __name__ == "__main__":
+	getSeries(config.url, config.download_dir)

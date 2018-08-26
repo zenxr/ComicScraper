@@ -1,0 +1,15 @@
+beautifulsoup4==4.6.3
+certifi==2018.8.24
+chardet==3.0.4
+docopt==0.6.2
+idna==2.7
+pbr==4.2.0
+pipreqs==0.4.9
+requests==2.19.1
+six==1.11.0
+stevedore==1.29.0
+urllib3==1.23
+virtualenv==16.0.0
+virtualenv-clone==0.3.0
+virtualenvwrapper==4.8.2
+yarg==0.1.9
