@@ -50,7 +50,6 @@ ComicScraper
 ├── README.md
 ├── config.py
 ├── example_config.py
-├── gui.py
 ├── requirements.txt
 └── scraper.py
 ```
